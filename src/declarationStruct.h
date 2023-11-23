@@ -12,11 +12,14 @@
 #include <stdio.h>
 /*Inclusion de la librairie stdlib.h qui permet à l'utilisateur de gérer la mémoire de façon dynamique ou encore de pouvoir intéragir avec le système d'exploitation*/
 #include <stdlib.h>
+#include <time.h>
 
 // Structure d'un noeud possédant un numéro, une position et un pointeur sur un suivant
 typedef struct node {
     int numero;
     int position;
+    int cost;
+    int heuristique;
     struct node* next;
 } node;
 

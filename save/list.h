@@ -22,6 +22,7 @@ void initList(list** myList);
 int isInL(list* myList, node* n);
 int emptyList(list* myList);
 void printList(list* myList);
+void delete(list* myList, node* myNode);
 
 
 #endif

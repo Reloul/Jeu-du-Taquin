@@ -77,7 +77,7 @@ int isInL (list* myList, node* myNode) {
     node* nTemp = myList->head;
     int verif = 0;
     //Tant qu'on atteint pas la fin de notre liste ou que l'on ne trouve pas le noeud que l'on chercher on fait la boucle
-    while(nTemp != NULL || verif == 0){
+    while(nTemp != NULL && verif == 0){
         if(nTemp == myNode){
             verif = 1;
         }
@@ -120,5 +120,6 @@ void printList (list* myList) {
     printf(" \n");
     free(nTemp);
 }
- 
+
+
  

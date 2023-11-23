@@ -14,31 +14,20 @@
 */ 
 
 #include "aEtoile.h"
+#include "taquin.h"
 
 
 int main(){
-    node* e;
-    e = malloc(sizeof(node));
-    e->numero = 1;
-    e->position = 1;
-    e->next = NULL;
+    int myvalue;
+    printf("Choisissez un entier\n");
+    myvalue = checkInteger();
+    printf("ma valeur : %d \n", myvalue);
 
-    node* new;
-    new = malloc(sizeof(node));
-    new->numero = 2;
-    new->position = 2;
-    new->next = e;
-    //printf("%d \n", new->next->numero);
-    list* myList;
-    initList(&myList);
-    //printf("%d \n", emptyList(myList));
-    addHead(myList, new);
-    //printf("%d \n", emptyList(myList));
-    printList(myList);
+    node** myGrid;
+    initGridGame(&myGrid, myvalue);
 
-    free(myList->premier);
-    free(myList);
-    free(new);
-    free(e);
+    setGrid(myGrid, myvalue);
+
+    printGrid(myGrid, myvalue);
     return(0);
 }

@@ -21,7 +21,7 @@ void initList(list** myList) {
     if (*myList == NULL) {
         exit(EXIT_FAILURE);
     }
-    (*myList)->premier = NULL;  // Initialise le premier élément à NULL.
+    (*myList)->head = NULL;  // Initialise le premier élément à NULL.
 }
 
 /*!
@@ -38,8 +38,8 @@ void addHead(list* myList, node* newNode) {
     if(myList == NULL || newNode == NULL){
         exit(EXIT_FAILURE);
     }
-    newNode->next = myList->premier;
-    myList->premier = newNode;
+    newNode->next = myList->head;
+    myList->head = newNode;
 }
 
 
@@ -53,11 +53,11 @@ void addHead(list* myList, node* newNode) {
 */
 
 void deleteHead (list* myList) {
-    if(myList == NULL|| myList->premier == NULL){
+    if(myList == NULL|| myList->head == NULL){
         exit(EXIT_FAILURE);
     }
-    node *deleteNode = myList->premier;
-    myList->premier = myList->premier->next;
+    node *deleteNode = myList->head;
+    myList->head = myList->head->next;
     free(deleteNode);
 }
  
@@ -74,10 +74,10 @@ void deleteHead (list* myList) {
 
 int isInL (list* myList, node* myNode) { 
     //on créait un noeud temporaire permettant de parcourir notre liste
-    node* nTemp = myList->premier;
+    node* nTemp = myList->head;
     int verif = 0;
     //Tant qu'on atteint pas la fin de notre liste ou que l'on ne trouve pas le noeud que l'on chercher on fait la boucle
-    while(nTemp != NULL || verif == 0){
+    while(nTemp != NULL && verif == 0){
         if(nTemp == myNode){
             verif = 1;
         }
@@ -97,7 +97,7 @@ int isInL (list* myList, node* myNode) {
 */
 
 int emptyList (list* myList) { 
-    return(myList->premier == NULL); 
+    return(myList->head == NULL); 
 }
 
 /*!
@@ -111,14 +111,15 @@ int emptyList (list* myList) {
 
 void printList (list* myList) {
     //on créait un noeud temporaire permettant de parcourir notre liste
-    node* nTemp = myList->premier;
+    node* nTemp = myList->head;
     //Tant qu'on atteint pas la fin de notre liste ou que l'on ne trouve pas le noeud que l'on chercher on fait la boucle
     while(nTemp != NULL){
         printf("%d ", nTemp->numero);
-        printf("test");
         nTemp = nTemp->next;
     }
     printf(" \n");
+    free(nTemp);
 }
- 
+
+
  

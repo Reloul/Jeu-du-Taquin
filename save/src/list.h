@@ -13,7 +13,7 @@
 
 // Structure permettant de représenter une liste
 typedef struct list {
-    node* premier;
+    node* head;
 } list;
 
 void addHead(list* myList, node* n);
@@ -22,6 +22,7 @@ void initList(list** myList);
 int isInL(list* myList, node* n);
 int emptyList(list* myList);
 void printList(list* myList);
+void delete(list* myList, node* myNode);
 
 
 #endif

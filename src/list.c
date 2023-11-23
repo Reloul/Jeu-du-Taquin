@@ -122,27 +122,4 @@ void printList (list* myList) {
 }
 
 
-/*!
- *  \fn void delete (list* myListn, node* myNode)
- *  \author SERRES Valentin <serresvale@cy-tech.fr>
- *  \version 0.1 Premier jet
- *  \date Sat 18 2023 - 18:16:02
- *  \brief procédure permettant de supprimer un élément précis de notre liste 
- *  \param myList pointeur de liste dont on souhaite supprimer un élément
- *  \param myNode pointeur de noeud que l'on souhaite supprimer de notre liste
-*/
-
-void delete (list* myList, node* myNode) {
-
-    if(isInL(myList, myNode)){
-        //on créait un noeud temporaire permettant de parcourir notre liste
-        node* nTemp = myList->head;
-        //Tant qu'on atteint pas la fin de notre liste ou que l'on ne trouve pas le noeud que l'on chercher on fait la boucle
-        while(nTemp != NULL){
-            
-            nTemp = nTemp->next;
-        }
-    }
-}
- 
  
