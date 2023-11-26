@@ -24,16 +24,17 @@ void shortestWay(node **myGrid, node *goal, node *start, int size) {
     initQueue(&myQueue);
     list *myList;
     initList(&myList);
+    int countMax = 0;
 
     int *numMove = malloc(sizeof(int));
     *numMove = 0;
 
     addSortNode(myList, start);
 
-    while (!emptyList(myList)) {
+    while (!emptyList(myList) && countMax < 1000) {
         node *u = myList->head;
         deleteHead(myList);
-
+        countMax++;
         if (u->position == goal->position) {
             buildPath(u);
             free(numMove);
@@ -56,7 +57,9 @@ void shortestWay(node **myGrid, node *goal, node *start, int size) {
 
         put(myQueue, u);
     }
-
+    if(countMax == 1000){
+        printf("Trop complexe \n");
+    }
     free(numMove);
     freeList(myList);
     freeQueue(myQueue);

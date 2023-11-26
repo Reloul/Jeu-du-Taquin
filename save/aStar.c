@@ -57,9 +57,7 @@ void shortestWay(node **myGrid, node *goal, node *start, int size) {
 
         put(myQueue, u);
     }
-    if(countMax == 1000){
-        printf("Trop complexe \n");
-    }
+
     free(numMove);
     freeList(myList);
     freeQueue(myQueue);
@@ -130,24 +128,29 @@ node** getNeighbor(node** myGrid, node* myNode, int size, int* numMove) {
  *  \param goal noeud représentant le noeud de départ 
 */
 
-void buildPath (node* goal) {
-    list* path;
+void buildPath(node *goal) {
+    list *path;
     initList(&path);
-    node* current = goal;
 
-    while( current != NULL){
-        node* pathNode = malloc(sizeof(node));
+    node *current = goal;
+
+    while (current != NULL) {
+        node *pathNode = malloc(sizeof(node));
         pathNode->numero = current->numero;
         pathNode->position = current->position;
-
         addHead(path, pathNode);
 
-        current = current->parent;
+        // Assurez-vous de sauvegarder le parent avant de mettre à jour current
+        node *parent = current->parent;
+
+        // Mettez à jour current après avoir sauvegardé le parent
+        current = parent;
     }
 
     printf("Chemin optimal : ");
     printList(path);
-    
+
+    freeList(path);  // N'oubliez pas de libérer la mémoire après utilisation
 }
 
 /*!

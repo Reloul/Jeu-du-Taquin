@@ -15,7 +15,7 @@
 
 #include "aStar.h"
 #include "taquin.h"
-
+#include <unistd.h>
 
 int main(){
     
@@ -42,7 +42,9 @@ int main(){
         break;
     case 2 :
         resolveTaquin(myGrid, myvalue);
-
+        sleep(2);
+        jouer(myGrid, myvalue);
+        printf("Bien joué vous avez gagné votre jeu du Taquin ! \n");
         break;
     default:
         break;
