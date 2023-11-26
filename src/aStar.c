@@ -17,38 +17,52 @@
  *  \param myGrid tableau 2d de pointeur de noeud représentant la grille de jeu du Taquin
  *  \param goal pointeur de noeud représentant le noeud que l'on souhaite atteindre
  *  \param start pointeur de noeud représentant le noeud de départ
+ *  \param size entier représentant la taille de notre grille de jeu
 */
 
 void shortestWay(node **myGrid, node *goal, node *start, int size) {
+    //Initialisation de mes files et listes
     queue *myQueue;
     initQueue(&myQueue);
     list *myList;
     initList(&myList);
-    int countMax = 0;
 
+    //entier CountMax servant normalement à arrêter le programme si la boucle countMax tourne trop longtemps
+    int countMax = 0;
+    //pointeur d'entier servant à compter le nb de voisin d'un noeud
     int *numMove = malloc(sizeof(int));
     *numMove = 0;
-
+    //On range dans notre liste notre noeuds de départ
     addSortNode(myList, start);
 
     while (!emptyList(myList) && countMax < 1000) {
+        //Notre noeud u prends la valeur de la te de la liste
         node *u = myList->head;
         deleteHead(myList);
         countMax++;
+        //On vérifie que u est ou non le noeuf que l'on cherche
         if (u->position == goal->position) {
+            //Si c'est le cas on construit notre chemin
             buildPath(u);
             free(numMove);
             freeList(myList);
             freeQueue(myQueue);
+            //return dans la boucle => Illégal mais un peu la flemme de faire autrement (j'aurais pû ajouter une variable verif)
             return;
+        //si u n'est pas le noeud recherché alors on va vérifier parmisses voisins et choisir celuiqui nous en rapproche
         } else {
+            //Tableau de noeud représentant les voisins de u
             node **neighbors = getNeighbor(myGrid, u, size, numMove);
+            //Pour tous les voisins de u
             for (int i = 0; i < *numMove; i++) {
                 node *v = neighbors[i];
+                //On vérifie si nous avons déjà consulté le voisin et si non on vérifie si le coût de son voisin est moins important que u
                 if (v != NULL && (!isInQ(myQueue, v) || v->cost + 1 < u->cost)) {
+                    //On augmente son coût et son coput heuristique, pas eu le temps de faire la distance de Hamming
                     v->cost = u->cost + 1;
                     v->heuristique = v->cost + distanceManhattan(myGrid, v, goal, size);
                     v->parent = u;
+                    //On ajout v à notre liste triée pour pouvoir consulter ses voisins
                     addSortNode(myList, v);
                 }
             }
@@ -61,6 +75,7 @@ void shortestWay(node **myGrid, node *goal, node *start, int size) {
     free(numMove);
     freeList(myList);
     freeQueue(myQueue);
+    //Si on arrive ici la résolution du taquin est impossible
     fprintf(stderr, "Impossible de résoudre le taquin.\n");
 }
 
@@ -97,13 +112,14 @@ int distanceManhattan (node** myGrid, node* nX, node* nY, int size) {
  *  \param myGrid tableau 2d de pointeur de noeud représentant la grille de jeu
  *  \param myNode noeud dont on souhaite récupérer ses voisins
  *  \param size entier représentant la taille de la grille de jeu 
+ *  \param numMove pointeur d'entier servant à représenter les voisins de notre noeud
  *  \return une liste de noeud réprésentant les voisins de myNode 
 */
 
 node** getNeighbor(node** myGrid, node* myNode, int size, int* numMove) { 
     coord coordMyNode = searchCoordCell(myGrid, myNode->numero, size);
     node** tabNeighbor = malloc(4 * sizeof(node*));
-
+    //On vérifie si le noeud est sur un des bords de la grille de jeu
     if (coordMyNode.coord_X > 0) {
         tabNeighbor[(*numMove)++] = &myGrid[coordMyNode.coord_X - 1][coordMyNode.coord_Y];
     }
@@ -125,7 +141,7 @@ node** getNeighbor(node** myGrid, node* myNode, int size, int* numMove) {
  *  \version 0.1 Premier jet
  *  \date Sat 25 2023 - 17:01:16
  *  \brief procédure permettant de reconstituer le chemin allant de notre noeud de départ à celui d'arriver 
- *  \param goal noeud représentant le noeud de départ 
+ *  \param goal noeud représentant le noeud voulu
 */
 
 void buildPath(node *goal) {
@@ -133,37 +149,24 @@ void buildPath(node *goal) {
     initList(&path);
 
     node *current = goal;
-
+    //On va chercher tous les noeuds parents afin de reformer le chemin pour résoudre le jeu du taquin
     while (current != NULL) {
         node *pathNode = malloc(sizeof(node));
         pathNode->numero = current->numero;
         pathNode->position = current->position;
         addHead(path, pathNode);
 
-        // Assurez-vous de sauvegarder le parent avant de mettre à jour current
         node *parent = current->parent;
 
-        // Mettez à jour current après avoir sauvegardé le parent
         current = parent;
     }
 
     printf("Chemin optimal : ");
     printList(path);
 
-    freeList(path);  // N'oubliez pas de libérer la mémoire après utilisation
+    freeList(path); 
 }
 
-/*!
- *  \fn void resolveTaquin (node** myGrid, int size)
- *  \author SERRES Valentin <serresvale@cy-tech.fr>
- *  \version 0.1 Premier jet
- *  \date Sun 26 2023 - 13:37:46
- *  \brief procédure permettant d'éxecuter l'algorithme A* afin de résoudre le jeu du taquin 
- *  \param myGrid tableau 2 d de pointeur de node représentant notre grille de jue à résoudre
- *  \param size entier correspondant à la taille de notre rille de jeu 
-*/
-
-// ...
 
 /*!
  *  \fn void resolveTaquin(node** myGrid, int size)
