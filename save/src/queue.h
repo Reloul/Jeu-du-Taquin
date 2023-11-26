@@ -22,6 +22,6 @@ int emptyQueue(queue* myQueue);
 int isInQ(queue* myQueue, node* n);
 void initQueue(queue** myQueue);
 void printQueue(queue* myQueue);
-
+void freeQueue (queue* myQueue);
 
 #endif

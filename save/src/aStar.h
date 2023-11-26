@@ -1,9 +1,9 @@
-#ifndef __AETOILE_H_
-#define __AETOILE_H_
+#ifndef __ASTAR_H_
+#define __ASTAR_H_
 
 
  /*!
- *  \file aEtoile.h
+ *  \file aStar.h
  *  \author SERRES Valentin <serresvale@cy-tech.fr>
  *  \version 0.1
  *  \brief fichier permettant de déclarer les fonctions nécessaires à résoudre l'algorithme A*

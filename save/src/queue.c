@@ -46,10 +46,10 @@ void put(queue* myQueue, node* myNode) {
         myQueue->first = myNode;
     }else{
         node *currentNode = myQueue->first;
-        while (currentNode->next != NULL){
-            currentNode = currentNode->next;
+        while (currentNode->nextQ != NULL){
+            currentNode = currentNode->nextQ;
         }
-        currentNode->next = myNode; 
+        currentNode->nextQ = myNode; 
     }
 }
 
@@ -66,7 +66,7 @@ void pass (queue* myQueue) {
     if(myQueue == NULL || myQueue->first == NULL){
         exit(EXIT_FAILURE);
     }
-    myQueue->first = myQueue->first->next;
+    myQueue->first = myQueue->first->nextQ;
 }
  
 /*!
@@ -101,7 +101,7 @@ int isInQ (queue* myQueue, node* myNode) {
         if(nTemp == myNode){
             verif = 1;
         }
-        nTemp = nTemp->next;
+        nTemp = nTemp->nextQ;
     } 
     return verif; 
 }
@@ -119,9 +119,26 @@ void printQueue (queue* myQueue) {
     node* nTemp = myQueue->first;
     while (nTemp != NULL){
         printf("%d ", nTemp->numero);
-        nTemp = nTemp->next;
+        nTemp = nTemp->nextQ;
     }
     printf("\n");
     free(nTemp);
 }
+
+
  
+ /*!
+  *  \fn void freeList (list* myList)
+  *  \author SERRES Valentin <serresvale@cy-tech.fr>
+  *  \version 0.1 Premier jet
+  *  \date Sat 25 2023 - 17:09:19
+  *  \brief procédure permettant de libérer la mémoire d'une file 
+  *  \param myQueue pointeur de file que dont on souhaite libérer la mémoire 
+ */
+ 
+ void freeQueue (queue* myQueue) {
+    while (!emptyQueue(myQueue)) {
+        pass(myQueue);
+    }
+    free(myQueue);
+ }

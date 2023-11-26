@@ -23,6 +23,8 @@ int isInL(list* myList, node* n);
 int emptyList(list* myList);
 void printList(list* myList);
 void delete(list* myList, node* myNode);
+void addSortNode(list* myList, node* n);
+void freeList (list* myList);
 
 
 #endif

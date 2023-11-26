@@ -20,7 +20,10 @@ typedef struct node {
     int position;
     int cost;
     int heuristique;
-    struct node* next;
+    struct node* nextL;
+    struct node* nextQ;
+    struct node* parent;
 } node;
+
 
 #endif

@@ -11,18 +11,13 @@
 
 #include "list.h"
 #include "queue.h"
+#include "taquin.h"
 
-list astar(node e);
+void shortestWay(node** myGrid, node* goal, node* start, int size);
 
-list chemin(node e, node f);
+int distanceManhattan(node** myGrid, node* nX, node* nY, int size);
+node** getNeighbor(node** myGride, node* myNode, int size, int* numMove);
+void buildPath (node* goal);
 
-int solution(node e);
-
-list succ(node e);
-
-int cost( node e, node f);
-
-int h(node e);
-
-
+void resolveTaquin(node** myGrid, int size);
 #endif

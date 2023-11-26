@@ -38,7 +38,7 @@ void addHead(list* myList, node* newNode) {
     if(myList == NULL || newNode == NULL){
         exit(EXIT_FAILURE);
     }
-    newNode->next = myList->head;
+    newNode->nextL = myList->head;
     myList->head = newNode;
 }
 
@@ -57,8 +57,8 @@ void deleteHead (list* myList) {
         exit(EXIT_FAILURE);
     }
     node *deleteNode = myList->head;
-    myList->head = myList->head->next;
-    free(deleteNode);
+    myList->head = myList->head->nextL;
+    //free(deleteNode);
 }
  
 /*!
@@ -81,7 +81,7 @@ int isInL (list* myList, node* myNode) {
         if(nTemp == myNode){
             verif = 1;
         }
-        nTemp = nTemp->next;
+        nTemp = nTemp->nextL;
     }
     return (verif);
 }
@@ -115,11 +115,47 @@ void printList (list* myList) {
     //Tant qu'on atteint pas la fin de notre liste ou que l'on ne trouve pas le noeud que l'on chercher on fait la boucle
     while(nTemp != NULL){
         printf("%d ", nTemp->numero);
-        nTemp = nTemp->next;
+        nTemp = nTemp->nextL;
     }
     printf(" \n");
     free(nTemp);
 }
 
 
+/*!
+ *  \fn void addSortNode (list* myList, node* nodeToSort)
+ *  \author SERRES Valentin <serresvale@cy-tech.fr>
+ *  \version 0.1 Premier jet
+ *  \date Fri 24 2023 - 18:38:49
+ *  \brief procédure permettant de rajouter de façon trier les différents noeuds dans ma liste en fonction des coûts heuristiques des noeuds
+ *  \param myList pointeur d'une liste triée dont on souhaite rajouter un élément
+ *  \param nodeToSort pointeur d'un noeud que l'on souhaite rajouter à notre liste mais qu'il soirt rangé en fonction de son coût heuristique
+*/
+
+void addSortNode(list* myList, node* nodeToSort) {
+    node** current = &myList->head;
+    
+    while (*current != NULL && (*current)->heuristique < nodeToSort->heuristique) {
+        current = &(*current)->nextL;
+    }
+
+    nodeToSort->nextL = *current;
+    *current = nodeToSort;
+}
  
+ /*!
+  *  \fn void freeList (list* myList)
+  *  \author SERRES Valentin <serresvale@cy-tech.fr>
+  *  \version 0.1 Premier jet
+  *  \date Sat 25 2023 - 17:09:19
+  *  \brief procédure permettant de libérer la mémoire d'une list 
+  *  \param myList pointeur de liste que dont on souhaite libérer la mémoire 
+ */
+ 
+ void freeList (list* myList) {
+    while (!emptyList(myList)) {
+        deleteHead(myList);
+    }
+    free(myList);
+ }
+  

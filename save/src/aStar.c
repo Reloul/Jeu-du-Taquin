@@ -1,11 +1,11 @@
  /*!
- *  \file aEtoile.c
+ *  \file aStar.c
  *  \author SERRES Valentin <serresvale@cy-tech.fr>
  *  \version 0.1
  *  \brief 
 */ 
 
-#include "aEtoile.h"
+#include "aStar.h"
 #include "taquin.h"
 
 /*!
@@ -19,48 +19,48 @@
  *  \param start pointeur de noeud représentant le noeud de départ
 */
 
-void shortestWay (node** myGrid, node* goal, node* start, int size) {
-    queue* myQueue;
+void shortestWay(node **myGrid, node *goal, node *start, int size) {
+    queue *myQueue;
     initQueue(&myQueue);
-    list* myList;
+    list *myList;
     initList(&myList);
-    int verif = 0;
-    int* numMove = malloc(sizeof(int));
+
+    int *numMove = malloc(sizeof(int));
+    *numMove = 0;
 
     addSortNode(myList, start);
-    while (!(emptyList(myList)) && verif == 0){
-        node* u = malloc(sizeof(node));
-        u->numero = myList->head->numero;
-        u->position = myList->head->position;
-        u->cost = myList->head->cost;
-        u->heuristique = myList->head->heuristique;
-        u->parent = myList->head->parent;
-        
+
+    while (!emptyList(myList)) {
+        node *u = myList->head;
         deleteHead(myList);
-        if(u->position == goal->position){
+
+        if (u->position == goal->position) {
             buildPath(u);
-            verif = 1;
-        }else{
-            *numMove = 0;
-            node** neighbor = getNeighbor(myGrid, u, size, numMove);
-            int i = 0;
-            while (i < *numMove && verif == 0){
-                node* v = neighbor[i];
-                if(v != NULL){
-                    if (!(isInQ(myQueue, v)) || (v->cost + 1 < u->cost)) {
-                        v->cost = u->cost + 1;
-                        v->heuristique = v->cost + distanceManhattan(myGrid, v, goal, size);
-                        v->parent = u;
-                        addSortNode(myList, v);
-                    }
+            free(numMove);
+            freeList(myList);
+            freeQueue(myQueue);
+            return;
+        } else {
+            node **neighbors = getNeighbor(myGrid, u, size, numMove);
+            for (int i = 0; i < *numMove; i++) {
+                node *v = neighbors[i];
+                if (v != NULL && (!isInQ(myQueue, v) || v->cost + 1 < u->cost)) {
+                    v->cost = u->cost + 1;
+                    v->heuristique = v->cost + distanceManhattan(myGrid, v, goal, size);
+                    v->parent = u;
+                    addSortNode(myList, v);
                 }
-                i++;
             }
+            free(neighbors);
         }
+
         put(myQueue, u);
     }
-    free(myList);
-    free(myQueue);
+
+    free(numMove);
+    freeList(myList);
+    freeQueue(myQueue);
+    fprintf(stderr, "Impossible de résoudre le taquin.\n");
 }
 
 /*!
@@ -80,13 +80,8 @@ int distanceManhattan (node** myGrid, node* nX, node* nY, int size) {
     coord coordXNode = searchCoordCell(myGrid, nX->numero, size);
     coord coordYNode = searchCoordCell(myGrid, nY->numero, size);
 
-    int calcX = coordYNode.coord_X - coordXNode.coord_X;
-    int calcY = coordYNode.coord_Y - coordXNode.coord_Y;
-
-    if(calcX < 0)
-        calcX = -calcX;
-    if(calcY < 0)
-        calcY = -calcY;
+    int calcX = abs(coordYNode.coord_X - coordXNode.coord_X);
+    int calcY = abs(coordYNode.coord_Y - coordXNode.coord_Y);
 
     return calcX + calcY; 
 }
@@ -108,16 +103,16 @@ node** getNeighbor(node** myGrid, node* myNode, int size, int* numMove) {
     coord coordMyNode = searchCoordCell(myGrid, myNode->numero, size);
     node** tabNeighbor = malloc(4 * sizeof(node*));
 
-    if (coordMyNode.coord_X > 0 && myGrid[coordMyNode.coord_X - 1][coordMyNode.coord_Y].numero == 0) {
+    if (coordMyNode.coord_X > 0) {
         tabNeighbor[(*numMove)++] = &myGrid[coordMyNode.coord_X - 1][coordMyNode.coord_Y];
     }
-    if (coordMyNode.coord_X < size - 1 && myGrid[coordMyNode.coord_X + 1][coordMyNode.coord_Y].numero == 0) {
+    if (coordMyNode.coord_X < size - 1) {
         tabNeighbor[(*numMove)++] = &myGrid[coordMyNode.coord_X + 1][coordMyNode.coord_Y];
     }
-    if (coordMyNode.coord_Y > 0 && myGrid[coordMyNode.coord_X][coordMyNode.coord_Y - 1].numero == 0) {
+    if (coordMyNode.coord_Y > 0) {
         tabNeighbor[(*numMove)++] = &myGrid[coordMyNode.coord_X][coordMyNode.coord_Y - 1];
     }
-    if (coordMyNode.coord_Y < size - 1 && myGrid[coordMyNode.coord_X][coordMyNode.coord_Y + 1].numero == 0) {
+    if (coordMyNode.coord_Y < size - 1) {
         tabNeighbor[(*numMove)++] = &myGrid[coordMyNode.coord_X][coordMyNode.coord_Y + 1];
     }
 
@@ -162,24 +157,32 @@ void buildPath (node* goal) {
  *  \param size entier correspondant à la taille de notre rille de jeu 
 */
 
+// ...
+
+/*!
+ *  \fn void resolveTaquin(node** myGrid, int size)
+ *  \author SERRES Valentin <serresvale@cy-tech.fr>
+ *  \version 0.1 Premier jet
+ *  \date Sun 26 2023 - 13:37:46
+ *  \brief procédure permettant d'éxecuter l'algorithme A* afin de résoudre le jeu du taquin 
+ *  \param myGrid tableau 2 d de pointeur de node représentant notre grille de jue à résoudre
+ *  \param size entier correspondant à la taille de notre grille de jeu 
+*/
+
 void resolveTaquin(node** myGrid, int size) {
-    //int win = 0;
-    int i = 0;
-    int j = 0;
+    int i, j;
     int count = 1;
-    //while(win == 0){
-        //i = 0;
-        coord coordCell = searchCoordCell(myGrid, 0, size);
-        shortestWay(myGrid, &myGrid[size-1][size-1], &myGrid[coordCell.coord_X][coordCell.coord_Y], size );
-        while( i < size-2){
-            j=0;
-            while( j < size-2){
-                coord coordCell = searchCoordCell(myGrid, count, size);
-                shortestWay(myGrid, &myGrid[i][j], &myGrid[coordCell.coord_X][coordCell.coord_Y], size );
-                j++;
-                count++;
-            }
-            i++;
+
+    // Résoudre pour la case 0
+    coord coordCell = searchCoordCell(myGrid, 0, size);
+    shortestWay(myGrid, &myGrid[size - 1][size - 1], &myGrid[coordCell.coord_X][coordCell.coord_Y], size);
+
+    // Résoudre pour les autres cases
+    for (i = 0; i < size - 1; i++) {
+        for (j = 0; j < size - 1; j++) {
+            coordCell = searchCoordCell(myGrid, count, size);
+            shortestWay(myGrid, &myGrid[i][j], &myGrid[coordCell.coord_X][coordCell.coord_Y], size);
+            count++;
         }
-  //  }
+    }
 }

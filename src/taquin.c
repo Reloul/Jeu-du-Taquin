@@ -112,13 +112,17 @@ void setGrid (node** myGrid, int size) {
         for(int j = 0; j<size; j++){
             myGrid[i][j].numero = count;
             myGrid[i][j].position = count;
-            myGrid[i][j].next = NULL;
+            myGrid[i][j].nextL = NULL;
+            myGrid[i][j].nextQ = NULL;
+            myGrid[i][j].cost = 1;
             count++;
         }
     }
     myGrid[size-1][size-1].numero = 0;
     myGrid[size-1][size-1].position = 0;
-    myGrid[size-1][size-1].next = NULL;
+    myGrid[size-1][size-1].nextL = NULL;
+    myGrid[size-1][size-1].nextQ = NULL;
+    myGrid[size-1][size-1].cost = 0;
 }
 
 
@@ -175,8 +179,23 @@ int move (node** myGrid,node* cell,int x, int y) {
     int verif = 0;
     if(myGrid[x][y].numero == 0){
         nodeTemp->numero = cell->numero;
-        cell->numero = 0;
+        nodeTemp->cost = cell->numero;
+        nodeTemp->nextL = cell->nextL;
+        nodeTemp->nextQ = cell->nextQ;
+        nodeTemp->parent = cell->parent;
+        nodeTemp->heuristique = cell->heuristique;
+        cell->numero = myGrid[x][y].numero;
+        cell->cost = myGrid[x][y].cost;
+        cell->nextL = myGrid[x][y].nextL;
+        cell->nextQ = myGrid[x][y].nextQ;
+        cell->parent = myGrid[x][y].parent;
+        cell->heuristique = myGrid[x][y].heuristique;
         myGrid[x][y].numero = nodeTemp->numero;
+        myGrid[x][y].cost = nodeTemp->cost;
+        myGrid[x][y].nextL = nodeTemp->nextL;
+        myGrid[x][y].nextQ = nodeTemp->nextQ;
+        myGrid[x][y].parent = nodeTemp->parent;
+        myGrid[x][y].heuristique = nodeTemp->heuristique;
         verif = 1;
     }
     return verif;
@@ -324,7 +343,6 @@ int verifWin (node** myGrid, int size) {
         while (j < size && verif == 1){
             if(myGrid[i][j].position != myGrid[i][j].numero){
                 verif = 0;
-                printf("position : %d, numero: %d\n", myGrid[i][j].position, myGrid[i][j].position);
             }
             j++;
         }
